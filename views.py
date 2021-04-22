@@ -12,7 +12,7 @@ import re
 def list_all_event(request):
     # List all events
     if request.user.is_authenticated:
-        return render(request, "events.html")
+        return render(request, "badge_events.html")
     else:
         return HttpResponseRedirect(reverse("badgeprint_logon"))
 
@@ -39,9 +39,9 @@ def json_all_event(request):
 
 
 def list_event_participant(request, event_id):
-    # List all participants from requested event.
+    # List all (badge) participants from requested (badge) event.
     if request.user.is_authenticated:
-        return render(request, "participants.html", {"id": event_id})
+        return render(request, "badge_participants.html", {"id": event_id})
     else:
         raise Http404("Authentication is required.")
 
@@ -212,13 +212,13 @@ def badgeprint_logon(request):
             try:
                 username = User.objects.get(email=email).username
             except ObjectDoesNotExist:
-                return render(request, "logon.html")
+                return render(request, "badge_logon.html")
             user = authenticate(username=username, password=password)
             if user is not None:
                 login(request, user)
             return HttpResponseRedirect(reverse("list_all_event"))
         else:
-            return render(request, "logon.html")
+            return render(request, "badge_logon.html")
 
 
 def badgeprint_logoff(request):
