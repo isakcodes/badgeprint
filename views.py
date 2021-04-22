@@ -2,7 +2,7 @@ from django.shortcuts import render, Http404
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, login, logout
+#from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse
 from badgeprint.models import Event, Printer, PrinterUser, Participant, Log
 from badgeprint.labelprint import print_text
@@ -14,7 +14,8 @@ def list_all_event(request):
     if request.user.is_authenticated:
         return render(request, "badge_events.html")
     else:
-        return HttpResponseRedirect(reverse("badgeprint_logon"))
+        #return HttpResponseRedirect(reverse("badgeprint_logon"))
+        return HttpResponseRedirect(reverse("user_login"))
 
 
 def json_all_event(request):
@@ -206,6 +207,8 @@ def badgeprint_logon(request):
     if request.user.is_authenticated:
         return HttpResponseRedirect(reverse("list_all_event"))
     else:
+        return HttpResponseRedirect(reverse("user_login"))
+        '''
         email = request.POST.get("inputEmail", "")
         password = request.POST.get("inputPassword", "")
         if email != "" and password != "":
@@ -219,9 +222,11 @@ def badgeprint_logon(request):
             return HttpResponseRedirect(reverse("list_all_event"))
         else:
             return render(request, "badge_logon.html")
+        '''
 
 
 def badgeprint_logoff(request):
-    if request.user.is_authenticated:
-        logout(request)
-    return HttpResponseRedirect(reverse("badgeprint_logon"))
+    return HttpResponseRedirect(reverse("user_logout"))
+    #if request.user.is_authenticated:
+    #    logout(request)
+    #return HttpResponseRedirect(reverse("badgeprint_logon"))
